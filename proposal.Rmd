@@ -1,0 +1,23 @@
+---
+title: "proposal"
+output: html_document
+---
+
+authors: Anthony Song, Jaydon Cobb, John Chandara, Michael Egle
+
+Possible Data Sets: 
+
+
+This repo has .csv files for deaths, recovered and affected worldwide:
+https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series
+
+
+
+
+Questions:
+What if the US were fully prepared?
+
+How would we take those early steps according to data from across the world?
+For the future climate, what steps in the future should we take?
+I think industry could factor into this investigation as well
+For this study we look as the physical and economic impact
