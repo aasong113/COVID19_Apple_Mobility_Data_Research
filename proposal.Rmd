@@ -2,22 +2,31 @@
 title: "proposal"
 output: html_document
 ---
-
 authors: Anthony Song, Jaydon Cobb, John Chandara, Michael Egle
 
-Possible Data Sets: 
+project coordinator: Anthony Song
+
+### How COVID-19 Spreads: Economic and Cultural Ifluences
 
 
-This repo has .csv files for deaths, recovered and affected worldwide:
+### Link to data sources and overview of datasets:
+
+# Master branch:
 https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series
+#The link above takes us to the master branch of GitHub repo in which we will be using three of the data sets. The three data sets below have data on the confirmed cases, deaths, and recoveries respectively. The data has the number of each case at the specific date of occurence. Along with this data we are given the longitude and latitude of the corresponding countries. 
+time_series_covid19_confirmed_global.csv
+time_series_covid19_deaths_global.csv 
+time_series_covid19_recovered_global.csv  
 
+###A brief plan for an exploratory analysis: What questions can be answered from the dataset?
 
+Using these three datasets we plan to understand why there is a difference in disease spread amongst various regions. Using the data we will be able to construct mapped plots that have color coded points that correspond to the intensity of disease contraction, mortality, and recovery. We can establish trends that may be drawn from contrasting or similar regions. Furthermore, we can look into how the economy and culture affects the disease distribution, mortality and recovery. Our quantitative analysis can be tied in with literature on various regions to back up claims on the affect of culture and economy on the distribution of COVID-19. Using our conclusions, we may be able to justify claims that may reduce the severity of future pandemics. 
 
-
-Questions:
-What if the US were fully prepared?
-
+Possible Questions:
+Are there any trends in regional spread for COVID-19 cases?
+Which regions have the highest mortality? Is this impacted by the quality of their healthcare system?
+What if the US were fully prepared? 
 How would we take those early steps according to data from across the world?
 For the future climate, what steps in the future should we take?
-I think industry could factor into this investigation as well
-For this study we look as the physical and economic impact
+What industries have been struggling? Which industry is struggling the most?
+Does culture play a role in this? What regions with similar cultures seem to have similar statuses.
