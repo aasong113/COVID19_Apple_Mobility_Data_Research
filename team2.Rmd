@@ -20,5 +20,7 @@ case <- read_csv(url('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/
 death <- read_csv(url('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'))
 
 rec <- read_csv(url('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv'))
+
+mob <- read_csv('applemobilitytrends-2020-04-24.csv')
 ```
 
