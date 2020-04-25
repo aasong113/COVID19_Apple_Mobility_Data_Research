@@ -22,5 +22,22 @@ death <- read_csv(url('https://raw.githubusercontent.com/CSSEGISandData/COVID-19
 rec <- read_csv(url('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv'))
 
 mob <- read_csv('applemobilitytrends-2020-04-24.csv')
+
+nyc <- read_csv('nyc_covid.csv') #from nyc.gov
+```
+
+```{r}
+mob <- mob %>%
+  pivot_longer(`2020-01-13`:`2020-04-24`,
+               names_to = "date",
+               values_to = "percent_change")
+```
+
+```{r}
+nyc <- nyc %>%
+  mutate(Deaths = ifelse(Deaths == "null", 0, Deaths))
+
+nyc <- nyc %>%
+  mutate(Hospitalizations = ifelse(Hospitalizations == "null", 0, Deaths))
 ```
 
