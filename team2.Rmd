@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(lubridate)
 ```
 
 
@@ -24,6 +25,8 @@ rec <- read_csv(url('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/m
 mob <- read_csv('applemobilitytrends-2020-04-24.csv')
 
 nyc <- read_csv('nyc_covid.csv') #from nyc.gov
+
+counties <- read_csv(url('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv'))
 ```
 
 ```{r}
@@ -34,10 +37,25 @@ mob <- mob %>%
 ```
 
 ```{r}
-nyc <- nyc %>%
-  mutate(Deaths = ifelse(Deaths == "null", 0, Deaths))
+counties <- counties %>%
+  mutate(date = ymd(date))
 
-nyc <- nyc %>%
-  mutate(Hospitalizations = ifelse(Hospitalizations == "null", 0, Deaths))
+mob <- mob %>%
+  mutate(date = ymd(date))
+```
+
+Break up the county data set into four datasets for our cities of interest
+```{r}
+nyc <- counties %>%
+  filter(county == "New York City")
+
+mia <- counties %>%
+  filter(county == "Miami-Dade")
+
+chi <- counties %>%
+  filter(county == "Cook", state == "Illinois")
+
+sf <- counties %>%
+  filter(county == "San Francisco")
 ```
 
