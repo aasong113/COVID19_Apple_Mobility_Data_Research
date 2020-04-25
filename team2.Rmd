@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(lubridate)
+library(ggpubr)
 ```
 
 
@@ -57,5 +58,45 @@ chi <- counties %>%
 
 sf <- counties %>%
   filter(county == "San Francisco")
+```
+
+```{r}
+nyc_travel <- mob %>%
+  filter(region == "New York City")
+
+mia_travel <- mob %>%
+  filter(region == "Miami")
+
+chi_travel <- mob %>%
+  filter(region == "Chicago")
+
+sf_travel <- mob %>%
+  filter(region == "San Francisco - Bay Area")
+```
+
+```{r}
+nyc_travel <- nyc_travel %>%
+  filter(date > ymd("2020/2/29"))
+```
+
+
+```{r}
+nyc_travel_viz <- nyc_travel %>%
+  ggplot(aes(x = date, y = percent_change, group = transportation_type,
+             color = transportation_type)) +
+  geom_line() +
+  geom_smooth() +
+  theme(legend.position = "none")
+```
+
+```{r}
+nyc_deaths_viz <- nyc %>%
+  ggplot(aes(x = date, y = deaths)) +
+  geom_histogram(stat = "identity")
+```
+
+```{r}
+ggarrange(nyc_travel_viz, nyc_deaths_viz,
+          nrow = 2)
 ```
 
