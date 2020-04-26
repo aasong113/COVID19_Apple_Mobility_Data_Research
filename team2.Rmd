@@ -48,17 +48,86 @@ mob <- mob %>%
 Break up the county data set into four datasets for our cities of interest
 ```{r}
 nyc <- counties %>%
-  filter(county == "New York City")
+  filter(county == "New York City") %>%
+  select(-fips)
 
 mia <- counties %>%
-  filter(county == "Miami-Dade")
+  filter(county == "Miami-Dade") %>%
+  select(-fips)
 
 chi <- counties %>%
-  filter(county == "Cook", state == "Illinois")
+  filter(county == "Cook", state == "Illinois") %>%
+  select(-fips)
 
 sf <- counties %>%
-  filter(county == "San Francisco")
+  filter(county == "San Francisco") %>%
+  select(-fips)
 ```
+
+
+Use inner_join and some date manipulations to get the cases from the previous day
+```{r}
+nyc2 <- nyc
+mia2 <- mia
+chi2 <- chi
+sf2 <- sf
+
+nyc <- nyc %>%
+  mutate(day_before = date - 1)
+
+mia <- mia %>%
+  mutate(day_before = date - 1)
+
+chi <- chi %>%
+  mutate(day_before = date - 1)
+
+sf <- sf %>%
+  mutate(day_before = date - 1)
+
+nyc2 <- nyc2 %>%
+  select(c('date', 'deaths'))
+
+mia2 <- mia2 %>%
+  select(c('date', 'deaths'))
+
+chi2 <- chi2 %>%
+  select(c('date', 'deaths'))
+
+sf2 <- sf2 %>%
+  select(c('date', 'deaths'))
+
+colnames(nyc2) <- c("day_before", "deaths_before")
+colnames(mia2) <- c("day_before", "deaths_before")
+colnames(chi2) <- c("day_before", "deaths_before")
+colnames(sf2) <- c("day_before", "deaths_before")
+
+nyc <- nyc %>%
+  inner_join(nyc2)
+
+mia <- mia %>%
+  inner_join(mia2)
+
+chi <- chi %>%
+  inner_join(chi2)
+
+sf <- sf %>%
+  inner_join(sf2)
+```
+
+```{r}
+nyc <- nyc %>%
+  mutate(new_deaths = deaths - deaths_before)
+
+mia <- mia %>%
+  mutate(new_deaths = deaths - deaths_before)
+
+chi <- chi %>%
+  mutate(new_deaths = deaths - deaths_before)
+
+sf <- sf %>%
+  mutate(new_deaths = deaths - deaths_before)
+```
+
 
 ```{r}
 nyc_travel <- mob %>%
@@ -74,11 +143,12 @@ sf_travel <- mob %>%
   filter(region == "San Francisco - Bay Area")
 ```
 
+
+Put together graph for NYC
 ```{r}
 nyc_travel <- nyc_travel %>%
   filter(date > ymd("2020/2/29"))
 ```
-
 
 ```{r}
 nyc_travel_viz <- nyc_travel %>%
@@ -86,17 +156,151 @@ nyc_travel_viz <- nyc_travel %>%
              color = transportation_type)) +
   geom_line() +
   geom_smooth() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 8, label = "Transit",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 35, label = "Walking",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 55, label = "Driving",
+           size = 3) +
+  geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
+  annotate(geom = "label", x = ymd("2020/3/20"), y = 125,
+           label = "Stay At Home Order Put Into Effect 3/20", size = 3) +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
 ```
 
 ```{r}
 nyc_deaths_viz <- nyc %>%
-  ggplot(aes(x = date, y = deaths)) +
-  geom_histogram(stat = "identity")
+  ggplot(aes(x = date, y = new_deaths)) +
+  geom_histogram(stat = "identity") +
+  geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
 ```
 
 ```{r}
 ggarrange(nyc_travel_viz, nyc_deaths_viz,
+          nrow = 2)
+```
+
+Now let's put together Miami's graphic
+```{r}
+mia_travel <- mia_travel %>%
+  filter(date > ymd("2020/2/29"))
+```
+
+```{r}
+mia_travel_viz <- mia_travel %>%
+  ggplot(aes(x = date, y = percent_change, group = transportation_type,
+             color = transportation_type)) +
+  geom_line() +
+  geom_smooth() +
+  theme(legend.position = "none") +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 32, label = "Transit",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 40, label = "Walking",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 55, label = "Driving",
+           size = 3) +
+  geom_vline(xintercept = ymd("2020/3/26"), linetype = "dashed") +
+  annotate(geom = "label", x = ymd("2020/3/26"), y = 140,
+           label = "Stay At Home Order Put Into Effect for Miami-Dade County 3/26",
+           size = 3)
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+
+```
+
+```{r}
+mia_deaths_viz <- mia %>%
+  ggplot(aes(x = date, y = new_deaths)) +
+  geom_histogram(stat = "identity") +
+  geom_vline(xintercept = ymd("2020/3/26"), linetype = "dashed") +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+
+```
+
+```{r}
+ggarrange(mia_travel_viz, mia_deaths_viz,
+          nrow = 2)
+```
+
+Now let's do Chicago
+```{r}
+chi_travel <- chi_travel %>%
+  filter(date > ymd("2020/2/29"))
+```
+
+```{r}
+chi_travel_viz <- chi_travel %>%
+  ggplot(aes(x = date, y = percent_change, group = transportation_type,
+             color = transportation_type)) +
+  geom_line() +
+  geom_smooth() +
+  theme(legend.position = "none") +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 15, label = "Transit",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 42, label = "Walking",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 69, label = "Driving",
+           size = 3) +
+  geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
+  annotate(geom = "label", x = ymd("2020/3/20"), y = 170,
+           label = "Stay At Home Order Put Into Effect 3/20", size = 3) +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+
+```
+
+```{r}
+chi_deaths_viz <- chi %>%
+  ggplot(aes(x = date, y = new_deaths)) +
+  geom_histogram(stat = "identity") +
+  geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+```
+
+```{r}
+ggarrange(chi_travel_viz, chi_deaths_viz,
+          nrow = 2)
+```
+
+And finally San Francisco
+```{r}
+sf <- sf %>%
+  filter(date > ymd("2020/2/29"))
+```
+
+```{r}
+sf_travel_viz <- sf_travel %>%
+  ggplot(aes(x = date, y = percent_change, group = transportation_type,
+             color = transportation_type)) +
+  geom_line() +
+  geom_smooth() +
+  theme(legend.position = "none") +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 15,
+           label = "Transit",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 32,
+           label = "Walking",
+           size = 3) +
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 47,
+           label = "Driving",
+           size = 3) +
+  geom_vline(xintercept = ymd("2020/3/16"), linetype = "dashed") +
+  annotate(geom = "label", x = ymd("2020/3/16"), y = 125,
+           label = "Stay At Home Order Put Into Effect 3/16",
+           size = 3) +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+```
+
+```{r}
+sf_deaths_viz <- sf %>%
+  ggplot(aes(x = date, y = new_deaths)) +
+  geom_histogram(stat = "identity") +
+  geom_vline(xintercept = ymd("2020/3/16"), linetype = "dashed") +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+```
+
+```{r}
+ggarrange(sf_travel_viz, sf_deaths_viz,
           nrow = 2)
 ```
 
