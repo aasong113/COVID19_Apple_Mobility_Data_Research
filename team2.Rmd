@@ -169,7 +169,9 @@ nyc_travel_viz <- nyc_travel %>%
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
   scale_y_continuous(limits = c(0, 200)) +
   labs(title = "New York City",
-       subtitle = "26,403 people per square mile")
+       subtitle = "26,403 people per square mile",
+       y = "Percent of Average Movement") +
+  theme(axis.title.x = element_blank())
 ```
 
 ```{r}
@@ -179,7 +181,9 @@ nyc_deaths_viz <- nyc %>%
   geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
   geom_smooth() +
-  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times",
+       x = "Date",
+       y = "New Deaths") +
   annotate(geom = "text", x = ymd("2020/4/12"), y = 1150,
            label = "11,157 total deaths as of 4/24", size = 3)
 ```
@@ -215,7 +219,9 @@ mia_travel_viz <- mia_travel %>%
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
   scale_y_continuous(limits = c(0, 200)) +
   labs(title = "Miami",
-       subtitle = "12,139 people per square mile")
+       subtitle = "12,139 people per square mile",
+       y = "Percent of Average Movement") +
+  theme(axis.title.x = element_blank())
 
 ```
 
@@ -227,7 +233,9 @@ mia_deaths_viz <- mia %>%
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
   geom_smooth() +
   scale_y_continuous(limits = c(0, 100)) +
-  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times",
+       x = "Date",
+       y = "New Deaths") +
   annotate(geom = "text", x = ymd("2020/4/12"), y = 70,
            label = "287 total deaths as of 4/24", size = 3)
 
@@ -263,7 +271,9 @@ chi_travel_viz <- chi_travel %>%
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
   scale_y_continuous(limits = c(0, 200)) +
   labs(title = "Chicago",
-       subtitle = "11,943 people per square mile")
+       subtitle = "11,943 people per square mile",
+       y = "Percent of Average Movement") +
+  theme(axis.title.x = element_blank())
 
 ```
 
@@ -274,7 +284,9 @@ chi_deaths_viz <- chi %>%
   geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
   geom_smooth() +
-  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times",
+       x = "Date",
+       y = "New Deaths") +
   scale_y_continuous(limits = c(0, 125)) +
   annotate(geom = "text", x = ymd("2020/4/12"), y = 112,
            label = "1,220 total deaths as of 4/24", size = 3)
@@ -314,7 +326,9 @@ sf_travel_viz <- sf_travel %>%
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))  +
   scale_y_continuous(limits = c(0, 200)) +
   labs(title = "San Francisco",
-       subtitle = "17,246 people per square mile")
+       subtitle = "17,246 people per square mile",
+       y = "Percent of Average Movement") +
+  theme(axis.title.x = element_blank())
 ```
 
 ```{r}
@@ -325,7 +339,9 @@ sf_deaths_viz <- sf %>%
   scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
   geom_smooth() +
   scale_y_continuous(limits = c(0, 100)) +
-  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times",
+       x = "Date",
+       y = "New Deaths") +
   annotate(geom = "text", x = ymd("2020/4/12"), y = 50,
            label = "22 total deaths as of 4/24", size = 3)
 ```
