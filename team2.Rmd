@@ -166,7 +166,10 @@ nyc_travel_viz <- nyc_travel %>%
   geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
   annotate(geom = "label", x = ymd("2020/3/20"), y = 125,
            label = "Stay At Home Order Put Into Effect 3/20", size = 3) +
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(title = "New York City",
+       subtitle = "26,403 people per square mile")
 ```
 
 ```{r}
@@ -174,7 +177,11 @@ nyc_deaths_viz <- nyc %>%
   ggplot(aes(x = date, y = new_deaths)) +
   geom_histogram(stat = "identity") +
   geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
+  geom_smooth() +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  annotate(geom = "text", x = ymd("2020/4/12"), y = 1150,
+           label = "11,157 total deaths as of 4/24", size = 3)
 ```
 
 ```{r}
@@ -195,7 +202,7 @@ mia_travel_viz <- mia_travel %>%
   geom_line() +
   geom_smooth() +
   theme(legend.position = "none") +
-  annotate(geom = "text", x = ymd("2020/4/17"), y = 32, label = "Transit",
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 25, label = "Transit",
            size = 3) +
   annotate(geom = "text", x = ymd("2020/4/17"), y = 40, label = "Walking",
            size = 3) +
@@ -204,8 +211,11 @@ mia_travel_viz <- mia_travel %>%
   geom_vline(xintercept = ymd("2020/3/26"), linetype = "dashed") +
   annotate(geom = "label", x = ymd("2020/3/26"), y = 140,
            label = "Stay At Home Order Put Into Effect for Miami-Dade County 3/26",
-           size = 3)
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+           size = 3) +
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(title = "Miami",
+       subtitle = "12,139 people per square mile")
 
 ```
 
@@ -214,7 +224,12 @@ mia_deaths_viz <- mia %>%
   ggplot(aes(x = date, y = new_deaths)) +
   geom_histogram(stat = "identity") +
   geom_vline(xintercept = ymd("2020/3/26"), linetype = "dashed") +
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
+  geom_smooth() +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  annotate(geom = "text", x = ymd("2020/4/12"), y = 70,
+           label = "287 total deaths as of 4/24", size = 3)
 
 ```
 
@@ -245,7 +260,10 @@ chi_travel_viz <- chi_travel %>%
   geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
   annotate(geom = "label", x = ymd("2020/3/20"), y = 170,
            label = "Stay At Home Order Put Into Effect 3/20", size = 3) +
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(title = "Chicago",
+       subtitle = "11,943 people per square mile")
 
 ```
 
@@ -254,7 +272,12 @@ chi_deaths_viz <- chi %>%
   ggplot(aes(x = date, y = new_deaths)) +
   geom_histogram(stat = "identity") +
   geom_vline(xintercept = ymd("2020/3/20"), linetype = "dashed") +
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
+  geom_smooth() +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  scale_y_continuous(limits = c(0, 125)) +
+  annotate(geom = "text", x = ymd("2020/4/12"), y = 112,
+           label = "1,220 total deaths as of 4/24", size = 3)
 ```
 
 ```{r}
@@ -275,20 +298,23 @@ sf_travel_viz <- sf_travel %>%
   geom_line() +
   geom_smooth() +
   theme(legend.position = "none") +
-  annotate(geom = "text", x = ymd("2020/4/17"), y = 15,
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 10,
            label = "Transit",
            size = 3) +
   annotate(geom = "text", x = ymd("2020/4/17"), y = 32,
            label = "Walking",
            size = 3) +
-  annotate(geom = "text", x = ymd("2020/4/17"), y = 47,
+  annotate(geom = "text", x = ymd("2020/4/17"), y = 52,
            label = "Driving",
            size = 3) +
   geom_vline(xintercept = ymd("2020/3/16"), linetype = "dashed") +
   annotate(geom = "label", x = ymd("2020/3/16"), y = 125,
            label = "Stay At Home Order Put Into Effect 3/16",
            size = 3) +
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))  +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(title = "San Francisco",
+       subtitle = "17,246 people per square mile")
 ```
 
 ```{r}
@@ -296,7 +322,12 @@ sf_deaths_viz <- sf %>%
   ggplot(aes(x = date, y = new_deaths)) +
   geom_histogram(stat = "identity") +
   geom_vline(xintercept = ymd("2020/3/16"), linetype = "dashed") +
-  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24")))
+  scale_x_date(limits = c(ymd("2020-03-01", "2020-04-24"))) +
+  geom_smooth() +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(caption = "Movement data from Apple Maps | Deaths data from New York Times") +
+  annotate(geom = "text", x = ymd("2020/4/12"), y = 50,
+           label = "22 total deaths as of 4/24", size = 3)
 ```
 
 ```{r}
