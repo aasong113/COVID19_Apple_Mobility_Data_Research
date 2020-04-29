@@ -13,9 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(lubridate)
 library(ggpubr)
+library(readxl)
+library(ggplot2)
 ```
 
-
+#Michael Egle Analysis
 ```{r}
 case <- read_csv(url('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv'))
 
@@ -351,3 +353,223 @@ ggarrange(sf_travel_viz, sf_deaths_viz,
           nrow = 2)
 ```
 
+
+
+#Anthony Song Analysis 
+Read in the data
+```{r}
+mob <- read_csv('applemobilitytrends-2020-04-24.csv')
+```
+pivot longer and month year date
+```{r}
+mob <- mob %>%
+  pivot_longer(`2020-01-13`:`2020-04-24`,
+               names_to = "date",
+               values_to = "percent_change")
+mob <- mob %>%
+  mutate(date = ymd(date))
+```
+Filter some low rate countries
+```{r}
+mob1 <- mob %>%
+  filter(transportation_type == "walking")
+# Very low death rate per million people
+indo <- mob1 %>%
+  filter(region == "Indonesia")
+cam <- mob1 %>%
+  filter(region == "Cambodia")
+kor <- mob1 %>%
+  filter(region == "Republic of Korea")
+tai <- mob1 %>%
+  filter(region == "Taiwan")
+tha <- mob1 %>%
+  filter(region == "Thailand")
+low_rate <- rbind(cam, tha)
+```
+First Visual
+```{r}
+reg_viz3 <- low_rate%>%
+  ggplot(aes(x = date, y = percent_change))+geom_line()+facet_wrap(~region)+geom_smooth()+ylim(0,200)
+reg_viz3+labs(x = "Date", y= "Percent Mobility Relative to Baseline", title = "Mobility of 2 Low Death Rate Regions")+geom_hline(yintercept = 125, linetype = "dashed", color = "red")+
+  annotate(geom = "label", x = ymd("2020/4/10"), y = 125,
+           label = "125% Mobility",
+           size = 3)
+
+```
+#These Countries have very low death rate per million, their rate small rate of change and activity agree with this. 
+```{r}
+# Rate of change of Indonesia
+qplot(date,percent_change,data=indo) + stat_smooth(aes(outfit=fit_indo<<-..y..))
+fit_indo <- data.frame(fit_indo)
+fit_indo$day<- seq.int(nrow(fit_indo))
+vc_indo <- c(max(fit_indo$fit_indo), min(fit_indo$fit_indo) )
+max_min_indo <- fit_indo[fit_indo$fit_indo %in% vc_indo,]
+print("Indonesia ROC")
+(max_min_indo[2,1] - max_min_indo[1,1]) / (max_min_indo[2,2] -max_min_indo[1,2])
+
+# rate of change of Cambodia
+qplot(date,percent_change,data=cam) + stat_smooth(aes(outfit=fit_cam<<-..y..))
+fit_cam <- data.frame(fit_cam)
+fit_cam$day<- seq.int(nrow(fit_cam))
+vc_cam <- c(max(fit_cam$fit_cam), min(fit_cam$fit_cam) )
+max_min_cam <- fit_cam[fit_cam$fit_cam %in% vc_cam,]
+print("Camboia ROC")
+(max_min_cam[2,1] - max_min_cam[1,1]) / (max_min_cam[2,2] -max_min_cam[1,2])
+
+# rate of change of Soutn korea
+qplot(date,percent_change,data=kor) + stat_smooth(aes(outfit=fit_kor<<-..y..))
+fit_kor <- data.frame(fit_kor)
+fit_kor$day<- seq.int(nrow(fit_kor))
+vc_kor <- c(max(fit_kor$fit_kor), min(fit_kor$fit_kor) )
+max_min_kor <- fit_kor[fit_kor$fit_kor %in% vc_kor,]
+print("South Korea ROC")
+(max_min_kor[2,1] - max_min_kor[1,1]) / (max_min_kor[2,2] -max_min_kor[1,2])
+
+# rate of change of Taiwan
+qplot(date,percent_change,data=tai) + stat_smooth(aes(outfit=fit_tai<<-..y..))
+fit_tai <- data.frame(fit_tai)
+fit_tai$day<- seq.int(nrow(fit_tai))
+vc_tai <- c(max(fit_tai$fit_tai), min(fit_tai$fit_tai) )
+max_min_tai <- fit_tai[fit_tai$fit_tai %in% vc_tai,]
+print("Taiwan ROC")
+(max_min_tai[2,1] - max_min_tai[1,1]) / (max_min_tai[2,2] -max_min_tai[1,2])
+
+# rate of change of Thailand
+qplot(date,percent_change,data=tha) + stat_smooth(aes(outfit=fit_tha<<-..y..))
+fit_tha <- data.frame(fit_tha)
+fit_tha$day<- seq.int(nrow(fit_tha))
+vc_tha <- c(max(fit_tha$fit_tha), min(fit_tha$fit_tha) )
+max_min_tha <- fit_tha[fit_tha$fit_tha %in% vc_tha,]
+print("Thailand ROC")
+(max_min_tha[2,1] - max_min_tha[1,1]) / (max_min_tha[2,2] -max_min_tha[1,2])
+```
+
+
+Regions
+```{r}
+#High death rate per million people. 
+ity <- mob %>%
+  filter(region == "Italy")
+por <- mob %>%
+  filter(region == "UK")
+esp <- mob %>%
+  filter(region == "Spain")
+bel <- mob %>%
+  filter(region == "Belgium")
+ire <- mob %>%
+  filter(region == "Ireland")
+usa <- mob %>%
+  filter(region == "United States")
+
+non_rec_regions <- rbind( por, esp, ire, bel)
+non_rec_regions <- non_rec_regions %>%
+  filter(transportation_type == "walking")
+
+reg_viz2 <- non_rec_regions %>%
+  ggplot(aes(x = date, y = percent_change))+geom_line()+facet_wrap(~region)+geom_smooth()+ylim(0,200)
+reg_viz2+labs(x = "Date", y = "Percent Change in Mobility", title = "Mobility of 4 High Death Rate Regions")+labs(x = "Date", y= "Percent Change in Mobility")+geom_hline(yintercept = 125, linetype = "dashed", color = "red")+annotate(geom = "label", x = ymd("2020/4/10"), y = 125,
+           label = "125% Mobility",
+           size = 3)
+
+# How does the USA compare???
+reg_viz_USA <- usa %>%
+  ggplot(aes(x = date, y = percent_change))+geom_line()+facet_wrap(~region)+geom_smooth()+ylim(0,175)
+reg_viz_USA+labs(x = "Date", y = "Percent Change in Mobility", title = "Walking Mobility of the USA")+labs(x = "Date", y= "Percent Mobility Relative to Baseline")+geom_hline(yintercept = 125, linetype = "dashed", color = "red")+annotate(geom = "label", x = ymd("2020/4/10"), y = 125,
+           label = "125% Mobility",
+           size = 3)
+```
+```{r}
+high_low <-rbind(cam, tha, bel, ire)
+reg_viz5 <- high_low%>%
+  ggplot(aes(x = date, y = percent_change))+geom_line()+facet_wrap(~region)+geom_smooth()+ylim(0,200)+labs(x = "Date", y= "Percent Mobility Relative to Baseline", title = "Contrasting Walking Mobility Data of 4 Regions")+geom_hline(yintercept = 125, linetype = "dashed", color = "red")+ annotate(geom = "label", x = ymd("2020/4/10"), y = 125,label = "125% Mobility",size = 3)
+reg_viz5
+```
+
+```{r}
+# rate of change of italy
+qplot(date,percent_change,data=ity) + stat_smooth(aes(outfit=fit_ity<<-..y..))
+fit_ity <- data.frame(fit_ity)
+fit_ity$day<- seq.int(nrow(fit_ity))
+vc_ity <- c(max(fit_ity$fit_ity), min(fit_ity$fit_ity) )
+max_min_ity <- fit_ity[fit_ity$fit_ity %in% vc_ity,]
+print("Italy ROC")
+rate <- c((max_min_ity[2,1] - max_min_ity[1,1]) / (max_min_ity[2,2] -max_min_ity[1,2]))
+
+# rate of change portugal
+qplot(date,percent_change,data=por) + stat_smooth(aes(outfit=fit_por<<-..y..))
+fit_por <- data.frame(fit_por)
+fit_por$day<- seq.int(nrow(fit_por))
+vc_por <- c(max(fit_por$fit_por), min(fit_por$fit_por) )
+max_min_por <- fit_por[fit_por$fit_por %in% vc_por,]
+print("Portugal ROC")
+rate <- append(rate, (max_min_por[2,1] - max_min_por[1,1]) / (max_min_por[2,2] -max_min_por[1,2]))
+
+# rate of change spain
+qplot(date,percent_change,data=esp) + stat_smooth(aes(outfit=fit_esp<<-..y..))
+fit_esp <- data.frame(fit_esp)
+fit_esp$day<- seq.int(nrow(fit_esp))
+vc_esp <- c(max(fit_esp$fit_esp), min(fit_esp$fit_esp) )
+max_min_esp <- fit_esp[fit_esp$fit_esp %in% vc_esp,]
+print("Spain ROC")
+rate <- append(rate,(max_min_esp[2,1] - max_min_esp[1,1]) / (max_min_esp[2,2] -max_min_esp[1,2]))
+
+# rate of change ireland
+qplot(date,percent_change,data=ire) + stat_smooth(aes(outfit=fit_ire<<-..y..))
+fit_ire <- data.frame(fit_ire)
+fit_ire$day<- seq.int(nrow(fit_ire))
+vc_ire <- c(max(fit_ire$fit_ire), min(fit_ire$fit_ire) )
+max_min_ire <- fit_ire[fit_ire$fit_ire %in% vc_ire,]
+print("Ireland ROC")
+rate <- append(rate,(max_min_ire[2,1] - max_min_ire[1,1]) / (max_min_ire[2,2] -max_min_ire[1,2]))
+
+# rate of change Belgium
+qplot(date,percent_change,data=bel) + stat_smooth(aes(outfit=fit_bel<<-..y..))
+fit_bel <- data.frame(fit_bel)
+fit_bel$day<- seq.int(nrow(fit_bel))
+vc_bel <- c(max(fit_bel$fit_bel), min(fit_bel$fit_bel) )
+max_min_bel <- fit_bel[fit_bel$fit_bel %in% vc_bel,]
+print("Belgium ROC")
+rate <- append(rate,(max_min_bel[2,1] - max_min_bel[1,1]) / (max_min_bel[2,2] -max_min_bel[1,2]))
+rate
+```
+
+```{r}
+# rate of change of USA
+qplot(date,percent_change,data=usa) + stat_smooth(aes(outfit=fit_usa<<-..y..))
+fit_usa <- data.frame(fit_usa)
+fit_usa$day<- seq.int(nrow(fit_usa))
+vc_usa <- c(max(fit_usa$fit_usa), min(fit_usa$fit_usa) )
+max_min_usa <- fit_usa[fit_usa$fit_usa %in% vc_usa,]
+max_min_usa
+(max_min_usa[2,1] - max_min_usa[1,1]) / (max_min_usa[2,2] -max_min_usa[1,2])
+
+```
+
+Read excel
+```{r}
+dpp <- read_excel("deaths_per_million.xlsx")
+```
+# clean data
+```{r}
+colnames(dpp) <- dpp[1, ]
+dpp <- dpp[-1, ]
+dpp[] <- lapply(dpp, function(x) type.convert(as.character(x)))
+dpp <- dpp[complete.cases(dpp),]
+# Take absolute value for plotting purposes. 
+#dpp$`Rate of decrease in Mobility` <- abs(dpp$`Rate of decrease in Mobility`)
+dpp
+```
+
+#Run linear regression
+```{r}
+# Model a polynomial function. 
+regressor = lm(dpp$`Deaths per a million people` ~ poly(dpp$`Rate of decrease in Mobility`,2, raw = TRUE), data=dpp)
+summary(regressor)
+pred_dpp <- data.frame(death = predict(regressor, dpp), rate=dpp$`Rate of decrease in Mobility`)
+
+#Graph with R^2 and p-value 
+ggplot(data = dpp, aes(y = `Deaths per a million people` , x = `Rate of decrease in Mobility`)) + 
+  geom_point(color='blue') +
+  geom_line(color='red',data = pred_dpp, aes(x=rate, y=death))+ labs(x = "Rate of Mobility from Peak to Base (Percent/Day)", title = "Effect of Walking Mobility Rate on COVID-19 Death Rate")+ annotate(geom = "label", x = -1, y = 500,label = "R^2: 0.775, p-value: 0.003",size = 5)+xlim(-4,0)+annotate(geom = "label", x = -1.6, y = 170,label = "USA",size = 4)+annotate(geom = "label", x = -0.8, y = 50,label = "Taiwan",size = 4)+annotate(geom = "label", x = -3.5, y = 450,label = "Spain",size = 4)
+```
+AS2*
