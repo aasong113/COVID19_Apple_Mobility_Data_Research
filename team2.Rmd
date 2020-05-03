@@ -399,7 +399,7 @@ reg_viz3+labs(x = "Date", y= "Percent Mobility Relative to Baseline", title = "M
 #These Countries have very low death rate per million, their rate small rate of change and activity agree with this. 
 ```{r}
 # Rate of change of Indonesia
-qplot(date,percent_change,data=indo) + stat_smooth(aes(outfit=fit_indo<<-..y..))
+qplot(date,percent_change,data=indo) + stat_smooth(aes(outfit=fit_indo<<-..y..))+annotate("rect", ymin = 25, ymax = 100, xmin = ymd("2020/3/1"), xmax = ymd("2020/4/1"), alpha = .2)+labs(title = "Indonesia Rate of Change")
 fit_indo <- data.frame(fit_indo)
 fit_indo$day<- seq.int(nrow(fit_indo))
 vc_indo <- c(max(fit_indo$fit_indo), min(fit_indo$fit_indo) )
@@ -557,7 +557,7 @@ dpp[] <- lapply(dpp, function(x) type.convert(as.character(x)))
 dpp <- dpp[complete.cases(dpp),]
 # Take absolute value for plotting purposes. 
 #dpp$`Rate of decrease in Mobility` <- abs(dpp$`Rate of decrease in Mobility`)
-dpp
+head(dpp)
 ```
 
 #Run linear regression
